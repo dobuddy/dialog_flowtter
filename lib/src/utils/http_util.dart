@@ -22,8 +22,17 @@ class HttpUtil {
   }
 
   /// Returns the formated session URI
-  static String getFormatedSession(String? projectId, String sessionId) {
-    return 'projects/$projectId/agent/sessions/$sessionId';
+
+  static String getFormattedSession({
+    String? projectId,
+    String? sessionId,
+    String? regionId,
+  }) {
+    if (regionId == null || regionId.isEmpty) {
+      return 'https://$regionId-dialogflow.googleapis.com/v3/projects/$projectId/agent/sessions/$sessionId:detectIntent';
+    } else {
+      return 'https://$regionId-dialogflow.googleapis.com/v3/projects/$projectId/locations/$regionId/agent/sessions/$sessionId:detectIntent';
+    }
   }
 
   /// Verifies if the response is valid and successful

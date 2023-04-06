@@ -100,6 +100,7 @@ class DialogFlowtter {
   ///
   /// {@macro session_recommend_template}
   final String sessionId;
+  final String? regionId;
 
   AutoRefreshingAuthClient? _client;
 
@@ -119,6 +120,7 @@ class DialogFlowtter {
     this.projectId,
     this.sessionId = _kDefaultSessionId,
     required this.credentials,
+    this.regionId,
   }) {
     EquatableConfig.stringify = true;
   }
@@ -130,12 +132,14 @@ class DialogFlowtter {
     Map<String, dynamic> json, {
     String? projectId,
     String sessionId = _kDefaultSessionId,
+    String? regionId,
   }) {
     DialogAuthCredentials creds = DialogAuthCredentials.fromJson(json);
     return DialogFlowtter(
       credentials: creds,
       projectId: projectId,
       sessionId: sessionId,
+      regionId: regionId,
     );
   }
 
@@ -149,12 +153,14 @@ class DialogFlowtter {
     String path = kDefaultJsonPath,
     String? projectId,
     String sessionId = _kDefaultSessionId,
+    String? regionId,
   }) async {
     DialogAuthCredentials creds = await DialogAuthCredentials.fromFile(path);
     return DialogFlowtter(
       credentials: creds,
       projectId: projectId,
       sessionId: sessionId,
+      regionId: regionId,
     );
   }
 
@@ -166,12 +172,14 @@ class DialogFlowtter {
     String url, {
     String? projectId,
     String sessionId = _kDefaultSessionId,
+    String? regionId,
   }) async {
     DialogAuthCredentials creds = await DialogAuthCredentials.fromNetwork(url);
     return DialogFlowtter(
       credentials: creds,
       projectId: projectId,
       sessionId: sessionId,
+      regionId: regionId,
     );
   }
 
@@ -194,10 +202,8 @@ class DialogFlowtter {
       audioConfig: audioConfig,
     );
 
-    final uri = Uri.parse(
-      '$kDialogFlowUrl/$kDialogFlowApiVersion/'
-      '${HttpUtil.getFormatedSession(projectId, sessionId)}:detectIntent',
-    );
+    final uri = Uri.parse('$kDialogFlowUrl/$kDialogFlowApiVersion/'
+        '${HttpUtil.getFormattedSession(projectId: projectId, sessionId: sessionId, regionId: regionId)}:detectIntent');
 
     final Response response = await _client!.post(
       uri,
